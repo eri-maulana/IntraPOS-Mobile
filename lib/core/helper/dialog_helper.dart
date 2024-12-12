@@ -1,3 +1,4 @@
+import 'package:intrapos_mobile/core/helper/global_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -29,7 +30,12 @@ class DialogHelper {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(title),
+                Text(
+                  title,
+                  style: GlobalHelper.getTextTheme(context,
+                          appTextStyle: AppTextStyle.TITLE_MEDIUM)
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                ),
                 (canDismiss)
                     ? IconButton(
                         onPressed: () {
