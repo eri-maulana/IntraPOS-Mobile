@@ -42,25 +42,11 @@ class ErrorAppWidget extends StatelessWidget {
               SizedBox(
                 height: 30,
               ),
-              (description.contains('401') ||
-                      description.toLowerCase().contains('unauthenticated'))
-                  ? FilledButton(
-                      onPressed: () async {
-                        await SharedPreferencesHelper.logout();
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginScreen(),
-                          ),
-                          (route) => false,
-                        );
-                      },
-                      child: Text('Logout'))
-                  : FilledButton.icon(
-                      onPressed: onPressButton,
-                      label: Text('Muat ulang'),
-                      icon: Icon(Icons.refresh),
-                    )
+              FilledButton.icon(
+                onPressed: onPressButton,
+                label: Text('Muat ulang'),
+                icon: Icon(Icons.refresh),
+              )
             ],
           ),
         ),

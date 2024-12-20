@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intrapos_mobile/core/di/dependency.dart';
 import 'package:intrapos_mobile/core/widget/loading_app_widget.dart';
+import 'package:intrapos_mobile/core/widget/error_app_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +20,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(colorSchemeSeed: Colors.red),
       home: Scaffold(
-        body: LoadingAppWidget(),
+        body: ErrorAppWidget(
+          description: "Error mengambil data", onPressButton: () {}
+        ),
       ),
     );
   }
