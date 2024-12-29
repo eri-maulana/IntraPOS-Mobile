@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intrapos_mobile/app/presentation/home/home_screen.dart';
 import 'package:intrapos_mobile/app/presentation/login/login_notifier.dart';
 import 'package:intrapos_mobile/core/helper/dialog_helper.dart';
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
@@ -45,7 +46,7 @@ class LoginScreen extends AppWidget<LoginNotifier, void, void> {
           ),
           Container(
               width: double.maxFinite,
-              child: FilledButton(onPressed: () {}, child: Text('Masuk'))),
+              child: FilledButton(onPressed: () => _onPressLogin(context), child: Text('Masuk'))),
           SizedBox(
             height: 50,
           )
@@ -72,5 +73,10 @@ class LoginScreen extends AppWidget<LoginNotifier, void, void> {
                 child: FilledButton(onPressed: () {}, child: Text('Simpan')))
           ],
         ));
+  }
+
+  _onPressLogin(BuildContext context) {
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen(),));
+    
   }
 }
