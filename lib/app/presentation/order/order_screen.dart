@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:intrapos_mobile/app/presentation/input_order/input_order_screen.dart';
 import 'package:intrapos_mobile/app/presentation/order/order_notifier.dart';
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
 import 'package:intrapos_mobile/core/provider/app_provider.dart';
@@ -32,7 +33,7 @@ class OrderScreen extends AppWidget<OrderNotifier, void, void> {
   @override
   Widget? floatingActionButtonBuild(BuildContext context) {
     return FloatingActionButton(
-      onPressed: () {},
+      onPressed: () => _onPressAddOrder(context),
       child: Icon(Icons.add),
     );
   }
@@ -99,5 +100,14 @@ class OrderScreen extends AppWidget<OrderNotifier, void, void> {
             )
           ],
         ));
+  }
+
+  _onPressAddOrder(BuildContext context) async {
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => InputOrderScreen(),
+        ));
+    notifier.init();
   }
 }

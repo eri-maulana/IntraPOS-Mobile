@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intrapos_mobile/app/presentation/home/home_notifier.dart';
+import 'package:intrapos_mobile/app/presentation/input_order/input_order_screen.dart';
 import 'package:intrapos_mobile/app/presentation/order/order_screen.dart';
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
 import 'package:intrapos_mobile/core/widget/app_widget.dart';
@@ -22,7 +23,7 @@ class HomeScreen extends AppWidget<HomeNotifier, void, void> {
   @override
   Widget? floatingActionButtonBuild(BuildContext context) {
     return FloatingActionButton(
-      onPressed: () {},
+      onPressed: () => _onPressAddOrder(context),
       child: Icon(Icons.add),
     );
   }
@@ -107,7 +108,9 @@ class HomeScreen extends AppWidget<HomeNotifier, void, void> {
                           fontWeight: FontWeight.bold),
                 ),
               ),
-              FilledButton(onPressed: () => _onPressShowAllOrder(context), child: Text('Lihat Semua'))
+              FilledButton(
+                  onPressed: () => _onPressShowAllOrder(context),
+                  child: Text('Lihat Semua'))
             ],
           ),
           SizedBox(
@@ -198,6 +201,15 @@ class HomeScreen extends AppWidget<HomeNotifier, void, void> {
         context,
         MaterialPageRoute(
           builder: (context) => OrderScreen(),
+        ));
+    notifier.init();
+  }
+
+  _onPressAddOrder(BuildContext context) async {
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => InputOrderScreen(),
         ));
     notifier.init();
   }
