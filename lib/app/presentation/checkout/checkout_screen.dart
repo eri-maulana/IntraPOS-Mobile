@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/material/app_bar.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:intrapos_mobile/app/presentation/checkout/checkout_notifier.dart';
+import 'package:intrapos_mobile/app/presentation/print/print_screen.dart';
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
 import 'package:intrapos_mobile/core/widget/app_widget.dart';
 
@@ -35,7 +36,8 @@ class CheckoutScreen extends AppWidget<CheckoutNotifier, void, void> {
           ),
           Container(
               width: double.maxFinite,
-              child: FilledButton(onPressed: () {}, child: Text('Kirim')))
+              child: FilledButton(
+                  onPressed: () => _onPressSend(context), child: Text('Kirim')))
         ],
       ),
     ));
@@ -254,5 +256,13 @@ class CheckoutScreen extends AppWidget<CheckoutNotifier, void, void> {
         ),
       ],
     );
+  }
+
+  _onPressSend(BuildContext context)  {
+     Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PrintScreen(),
+        ));
   }
 }

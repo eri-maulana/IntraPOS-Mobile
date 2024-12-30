@@ -203,12 +203,11 @@ class InputOrderScreen extends AppWidget<InputOrderNotifier, void, void> {
     notifier.init();
   }
 
-  _onPressCheckout(BuildContext context) async {
-     await Navigator.push(
+  _onPressCheckout(BuildContext context)  {
+      Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => CheckoutScreen(),
         ));
-        notifier.init();
   }
 }
