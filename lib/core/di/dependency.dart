@@ -7,6 +7,7 @@ import 'package:intrapos_mobile/app/presentation/input_order/input_order_notifie
 import 'package:intrapos_mobile/app/presentation/login/login_notifier.dart';
 import 'package:intrapos_mobile/app/presentation/order/order_notifier.dart';
 import 'package:intrapos_mobile/app/presentation/print/print_notifier.dart';
+import 'package:intrapos_mobile/app/presentation/profil/profil_notifier.dart';
 import 'package:intrapos_mobile/core/network/app_interceptor.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -46,5 +47,8 @@ void initDependency() {
   );
   sl.registerFactoryParam<PrintNotifier, void, void>(
     (param1, param2) => PrintNotifier(),
+  );
+  sl.registerFactoryParam<ProfilNotifier, void, void>(
+    (param1, param2) => ProfilNotifier(),
   );
 }

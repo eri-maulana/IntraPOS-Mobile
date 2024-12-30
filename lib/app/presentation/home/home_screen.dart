@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intrapos_mobile/app/presentation/home/home_notifier.dart';
 import 'package:intrapos_mobile/app/presentation/input_order/input_order_screen.dart';
 import 'package:intrapos_mobile/app/presentation/order/order_screen.dart';
+import 'package:intrapos_mobile/app/presentation/profil/profil_screen.dart';
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
 import 'package:intrapos_mobile/core/widget/app_widget.dart';
 import 'package:flutter/widgets.dart';
@@ -38,17 +39,20 @@ class HomeScreen extends AppWidget<HomeNotifier, void, void> {
           ),
           Row(
             children: [
-              CircleAvatar(
-                radius: 40,
-                backgroundColor: GlobalHelper.getColorScheme(context).primary,
-                child: Text(
-                  'A',
-                  style: GlobalHelper.getTextTheme(context,
-                          appTextStyle: AppTextStyle.HEADLINE_LARGE)
-                      ?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color:
-                              GlobalHelper.getColorScheme(context).onPrimary),
+              InkWell(
+                onTap: () => _onPressAvatar(context),
+                child: CircleAvatar(
+                  radius: 40,
+                  backgroundColor: GlobalHelper.getColorScheme(context).primary,
+                  child: Text(
+                    'A',
+                    style: GlobalHelper.getTextTheme(context,
+                            appTextStyle: AppTextStyle.HEADLINE_LARGE)
+                        ?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color:
+                                GlobalHelper.getColorScheme(context).onPrimary),
+                  ),
                 ),
               ),
               SizedBox(
@@ -212,5 +216,13 @@ class HomeScreen extends AppWidget<HomeNotifier, void, void> {
           builder: (context) => InputOrderScreen(),
         ));
     notifier.init();
+  }
+
+  _onPressAvatar(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProfilScreen(),
+        ));
   }
 }
