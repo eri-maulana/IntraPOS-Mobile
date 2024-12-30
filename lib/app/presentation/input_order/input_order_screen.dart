@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/material/app_bar.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:intrapos_mobile/app/presentation/add_product_order/add_product_order_screen.dart';
+import 'package:intrapos_mobile/app/presentation/checkout/checkout_screen.dart';
 import 'package:intrapos_mobile/app/presentation/input_order/input_order_notifier.dart';
 import 'package:intrapos_mobile/core/helper/dialog_helper.dart';
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
@@ -65,7 +66,7 @@ class InputOrderScreen extends AppWidget<InputOrderNotifier, void, void> {
           ),
           Container(
             width: double.maxFinite,
-            child: FilledButton(onPressed: () {}, child: Text('Checkout')),
+            child: FilledButton(onPressed: () => _onPressCheckout(context), child: Text('Checkout')),
           )
         ],
       ),
@@ -200,5 +201,14 @@ class InputOrderScreen extends AppWidget<InputOrderNotifier, void, void> {
           builder: (context) => AddProductOrderScreen(),
         ));
     notifier.init();
+  }
+
+  _onPressCheckout(BuildContext context) async {
+     await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CheckoutScreen(),
+        ));
+        notifier.init();
   }
 }
