@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
+import 'package:intrapos_mobile/app/presentation/add_product_order/add_product_order_notifier.dart';
 import 'package:intrapos_mobile/app/presentation/home/home_notifier.dart';
 import 'package:intrapos_mobile/app/presentation/input_order/input_order_notifier.dart';
 import 'package:intrapos_mobile/app/presentation/login/login_notifier.dart';
@@ -34,5 +35,8 @@ void initDependency() {
   );
   sl.registerFactoryParam<InputOrderNotifier, void, void>(
     (param1, param2) => InputOrderNotifier(),
+  );
+  sl.registerFactoryParam<AddProductOrderNotifier, void, void>(
+    (param1, param2) => AddProductOrderNotifier(),
   );
 }

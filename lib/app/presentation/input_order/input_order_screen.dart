@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/material/app_bar.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:intrapos_mobile/app/presentation/add_product_order/add_product_order_screen.dart';
 import 'package:intrapos_mobile/app/presentation/input_order/input_order_notifier.dart';
 import 'package:intrapos_mobile/core/helper/dialog_helper.dart';
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
@@ -40,7 +41,9 @@ class InputOrderScreen extends AppWidget<InputOrderNotifier, void, void> {
               IconButton.outlined(
                   onPressed: () {}, icon: Icon(Icons.qr_code_scanner)),
               Padding(padding: EdgeInsets.all(5)),
-              IconButton.filled(onPressed: () {}, icon: Icon(Icons.add)),
+              IconButton.filled(
+                  onPressed: () => _onPressAddProduct(context),
+                  icon: Icon(Icons.add)),
             ],
           ),
           SizedBox(
@@ -188,5 +191,14 @@ class InputOrderScreen extends AppWidget<InputOrderNotifier, void, void> {
             ),
           ],
         ));
+  }
+
+  _onPressAddProduct(BuildContext context) async {
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AddProductOrderScreen(),
+        ));
+    notifier.init();
   }
 }
