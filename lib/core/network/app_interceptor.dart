@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:intrapos_mobile/core/constant/constant.dart';
 import 'package:intrapos_mobile/core/helper/shared_preferences.dart';
-
 import 'package:dio/dio.dart';
 
 class AppInterceptor extends Interceptor {

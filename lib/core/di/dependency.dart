@@ -1,5 +1,9 @@
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
+import 'package:intrapos_mobile/app/data/repositoty/auth_repository.dart';
+import 'package:intrapos_mobile/app/data/source/auth_api_service.dart';
+import 'package:intrapos_mobile/app/domain/repository/auth_repository.dart';
+import 'package:intrapos_mobile/app/domain/usecase/auth_login.dart';
 import 'package:intrapos_mobile/app/presentation/add_product_order/add_product_order_notifier.dart';
 import 'package:intrapos_mobile/app/presentation/checkout/checkout_notifier.dart';
 import 'package:intrapos_mobile/app/presentation/home/home_notifier.dart';
@@ -26,9 +30,18 @@ void initDependency() {
 
   sl.registerSingleton<Dio>(dio);
 
-  //presentation
+  // api service
+  sl.registerSingleton<AuthApiService>(AuthApiService(sl()));
+
+  // repository
+  sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl()));
+
+  // use case
+  sl.registerSingleton<AuthLoginUseCase>(AuthLoginUseCase(sl()));
+
+  // presentation
   sl.registerFactoryParam<LoginNotifier, void, void>(
-    (param1, param2) => LoginNotifier(),
+    (param1, param2) => LoginNotifier(sl()),
   );
   sl.registerFactoryParam<HomeNotifier, void, void>(
     (param1, param2) => HomeNotifier(),

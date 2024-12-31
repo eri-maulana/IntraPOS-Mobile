@@ -5,6 +5,7 @@ import 'package:intrapos_mobile/core/helper/dialog_helper.dart';
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
 import 'package:intrapos_mobile/core/widget/app_widget.dart';
 
+
 class LoginScreen extends AppWidget<LoginNotifier, void, void> {
   @override
   Widget bodyBuild(BuildContext context) {
@@ -28,6 +29,7 @@ class LoginScreen extends AppWidget<LoginNotifier, void, void> {
             ),
           ),
           TextField(
+            controller: notifier.emailController,
             decoration: InputDecoration(
                 label: Text('Email'), border: OutlineInputBorder()),
           ),
@@ -35,23 +37,37 @@ class LoginScreen extends AppWidget<LoginNotifier, void, void> {
             height: 10,
           ),
           TextField(
+            controller: notifier.passwordController,
+            obscureText: true,
             decoration: InputDecoration(
-              label: Text('Kata Sandi'),
-              border: OutlineInputBorder(),
-            ),
+                label: Text('Kata Sandi'), border: OutlineInputBorder()),
           ),
           SizedBox(
             height: 10,
           ),
           Container(
               width: double.maxFinite,
-              child: FilledButton(onPressed: () => _onPressLogin(context), child: Text('Masuk'))),
+              child: FilledButton(
+                  onPressed: () => _onPressLogin(context),
+                  child: Text('Masuk'))),
           SizedBox(
             height: 50,
           )
         ],
       ),
     ));
+  }
+
+  @override
+  checkVariable(BuildContext context) {
+    if (notifier.isLogged) {
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ));
+    }
+    return super.checkVariable(context);
   }
 
   _onPressUrlButton(BuildContext context) {
@@ -70,16 +86,17 @@ class LoginScreen extends AppWidget<LoginNotifier, void, void> {
             ),
             Container(
                 width: double.maxFinite,
-                child: FilledButton(onPressed: () => _onPressSaveBaseUrl(context), child: Text('Simpan')))
+                child: FilledButton(
+                    onPressed: () => _onPressSaveBaseUrl(context),
+                    child: Text('Simpan')))
           ],
         ));
   }
 
   _onPressLogin(BuildContext context) {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen(),));
-    
+    notifier.login();
   }
-  
+
   _onPressSaveBaseUrl(BuildContext context) {
     notifier.saveBaseUrl();
     Navigator.pop(context);
