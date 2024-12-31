@@ -4,7 +4,6 @@ import 'package:intrapos_mobile/app/presentation/login/login_notifier.dart';
 import 'package:intrapos_mobile/core/helper/dialog_helper.dart';
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
 import 'package:intrapos_mobile/core/widget/app_widget.dart';
-// import 'flutter/src/widgets/framework.dart';
 
 class LoginScreen extends AppWidget<LoginNotifier, void, void> {
   @override
@@ -62,6 +61,7 @@ class LoginScreen extends AppWidget<LoginNotifier, void, void> {
         content: Column(
           children: [
             TextField(
+              controller: notifier.baseUrlController,
               decoration: InputDecoration(
                   label: Text('Base URL'), border: OutlineInputBorder()),
             ),
@@ -70,7 +70,7 @@ class LoginScreen extends AppWidget<LoginNotifier, void, void> {
             ),
             Container(
                 width: double.maxFinite,
-                child: FilledButton(onPressed: () {}, child: Text('Simpan')))
+                child: FilledButton(onPressed: () => _onPressSaveBaseUrl(context), child: Text('Simpan')))
           ],
         ));
   }
@@ -78,5 +78,10 @@ class LoginScreen extends AppWidget<LoginNotifier, void, void> {
   _onPressLogin(BuildContext context) {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen(),));
     
+  }
+  
+  _onPressSaveBaseUrl(BuildContext context) {
+    notifier.saveBaseUrl();
+    Navigator.pop(context);
   }
 }
