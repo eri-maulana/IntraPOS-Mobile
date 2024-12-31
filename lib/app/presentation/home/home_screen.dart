@@ -45,7 +45,7 @@ class HomeScreen extends AppWidget<HomeNotifier, void, void> {
                   radius: 40,
                   backgroundColor: GlobalHelper.getColorScheme(context).primary,
                   child: Text(
-                    'A',
+                    notifier.name.substring(0, 1),
                     style: GlobalHelper.getTextTheme(context,
                             appTextStyle: AppTextStyle.HEADLINE_LARGE)
                         ?.copyWith(
@@ -63,7 +63,7 @@ class HomeScreen extends AppWidget<HomeNotifier, void, void> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Admin',
+                      notifier.name,
                       style: GlobalHelper.getTextTheme(context,
                               appTextStyle: AppTextStyle.TITLE_LARGE)
                           ?.copyWith(
@@ -75,7 +75,7 @@ class HomeScreen extends AppWidget<HomeNotifier, void, void> {
                       height: 5,
                     ),
                     Text(
-                      'eri@maulana.com',
+                      notifier.email,
                       style: GlobalHelper.getTextTheme(context,
                               appTextStyle: AppTextStyle.LABEL_LARGE)
                           ?.copyWith(
