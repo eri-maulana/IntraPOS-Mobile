@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:intrapos_mobile/app/domain/entity/order.dart';
 import 'package:intrapos_mobile/app/presentation/input_order/input_order_screen.dart';
 import 'package:intrapos_mobile/app/presentation/order/order_notifier.dart';
+import 'package:intrapos_mobile/core/helper/date_time_helper.dart';
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
+import 'package:intrapos_mobile/core/helper/number_helper.dart';
 import 'package:intrapos_mobile/core/provider/app_provider.dart';
 import 'package:intrapos_mobile/core/widget/app_widget.dart';
 
@@ -23,9 +26,11 @@ class OrderScreen extends AppWidget<OrderNotifier, void, void> {
               separatorBuilder: (context, index) => SizedBox(
                 height: 5,
               ),
-              itemCount: 5,
+              itemCount: notifier.listOrder.length,
               itemBuilder: (context, index) {
-                return _itemOrderLayout(context);
+                final item =
+                    notifier.listOrder[notifier.listOrder.length - 1 - index];
+                return _itemOrderLayout(context, item);
               },
             )));
   }
@@ -38,7 +43,7 @@ class OrderScreen extends AppWidget<OrderNotifier, void, void> {
     );
   }
 
-  _itemOrderLayout(BuildContext context) {
+  _itemOrderLayout(BuildContext context, OrderEntity item) {
     return Container(
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(color: Colors.white),
@@ -48,7 +53,7 @@ class OrderScreen extends AppWidget<OrderNotifier, void, void> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'nama_pelanggan',
+                  item.name,
                   style: GlobalHelper.getTextTheme(context,
                           appTextStyle: AppTextStyle.BODY_LARGE)
                       ?.copyWith(
@@ -56,7 +61,9 @@ class OrderScreen extends AppWidget<OrderNotifier, void, void> {
                           fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  '11 Mei 2001 23:30',
+                  DateTimeHelper.formatDateTimeFromString(
+                      dateTimeString: item.updatedAt,
+                      format: 'dd MMM yyyy HH:mm'),
                   style: GlobalHelper.getTextTheme(context,
                           appTextStyle: AppTextStyle.BODY_SMALL)
                       ?.copyWith(
@@ -72,7 +79,7 @@ class OrderScreen extends AppWidget<OrderNotifier, void, void> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Rp. 50.000 (1 item)',
+                  '${NumberHelper.formatIdr(item.totalPrice!)} (${item.items.length} item)',
                   style: GlobalHelper.getTextTheme(context,
                           appTextStyle: AppTextStyle.BODY_MEDIUM)
                       ?.copyWith(
@@ -88,7 +95,7 @@ class OrderScreen extends AppWidget<OrderNotifier, void, void> {
                               GlobalHelper.getColorScheme(context).secondary),
                       borderRadius: BorderRadius.circular(5)),
                   child: Text(
-                    'Cash',
+                    item.paymentMethod!.name,
                     style: GlobalHelper.getTextTheme(context,
                             appTextStyle: AppTextStyle.BODY_SMALL)
                         ?.copyWith(

@@ -1,9 +1,24 @@
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:intrapos_mobile/app/data/repositoty/auth_repository.dart';
+import 'package:intrapos_mobile/app/data/repositoty/order_repository.dart';
+import 'package:intrapos_mobile/app/data/repositoty/payment_method_repository.dart';
+import 'package:intrapos_mobile/app/data/repositoty/product_repository.dart';
+import 'package:intrapos_mobile/app/data/repositoty/setting_repository.dart';
 import 'package:intrapos_mobile/app/data/source/auth_api_service.dart';
+import 'package:intrapos_mobile/app/data/source/order_api_service.dart';
+import 'package:intrapos_mobile/app/data/source/payment_method_api_service.dart';
+import 'package:intrapos_mobile/app/data/source/product_api_service.dart';
+import 'package:intrapos_mobile/app/data/source/setting_api_service.dart';
+import 'package:intrapos_mobile/app/domain/entity/product.dart';
 import 'package:intrapos_mobile/app/domain/repository/auth_repository.dart';
+import 'package:intrapos_mobile/app/domain/repository/order_repository.dart';
+import 'package:intrapos_mobile/app/domain/repository/payment_method_repository.dart';
+import 'package:intrapos_mobile/app/domain/repository/product_repository.dart';
+import 'package:intrapos_mobile/app/domain/repository/setting_repository.dart';
 import 'package:intrapos_mobile/app/domain/usecase/auth_login.dart';
+import 'package:intrapos_mobile/app/domain/usecase/order_get_all.dart';
+import 'package:intrapos_mobile/app/domain/usecase/order_get_today.dart';
 import 'package:intrapos_mobile/app/presentation/add_product_order/add_product_order_notifier.dart';
 import 'package:intrapos_mobile/app/presentation/checkout/checkout_notifier.dart';
 import 'package:intrapos_mobile/app/presentation/home/home_notifier.dart';
@@ -18,7 +33,7 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 final sl = GetIt.instance;
 
 void initDependency() {
-  // dio
+  //dio
   Dio dio = Dio();
   dio.interceptors.add(PrettyDioLogger(
       requestHeader: true,
@@ -30,38 +45,32 @@ void initDependency() {
 
   sl.registerSingleton<Dio>(dio);
 
-  // api service
+  //api service
   sl.registerSingleton<AuthApiService>(AuthApiService(sl()));
+  sl.registerSingleton<OrderApiService>(OrderApiService(sl()));
 
-  // repository
+  //repository
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl()));
+  sl.registerSingleton<OrderRepository>(OrderRepositoryImpl(sl()));
 
-  // use case
+  //use case
   sl.registerSingleton<AuthLoginUseCase>(AuthLoginUseCase(sl()));
+  sl.registerSingleton<OrderGetTodayUseCase>(OrderGetTodayUseCase(sl()));
+  sl.registerSingleton<OrderGetAllUseCase>(OrderGetAllUseCase(sl()));
+  
 
-  // presentation
+  //presentation
   sl.registerFactoryParam<LoginNotifier, void, void>(
     (param1, param2) => LoginNotifier(sl()),
   );
   sl.registerFactoryParam<HomeNotifier, void, void>(
-    (param1, param2) => HomeNotifier(),
+    (param1, param2) => HomeNotifier(sl()),
   );
   sl.registerFactoryParam<OrderNotifier, void, void>(
-    (param1, param2) => OrderNotifier(),
+    (param1, param2) => OrderNotifier(sl()),
   );
+  
   sl.registerFactoryParam<InputOrderNotifier, void, void>(
     (param1, param2) => InputOrderNotifier(),
-  );
-  sl.registerFactoryParam<AddProductOrderNotifier, void, void>(
-    (param1, param2) => AddProductOrderNotifier(),
-  );
-  sl.registerFactoryParam<CheckoutNotifier, void, void>(
-    (param1, param2) => CheckoutNotifier(),
-  );
-  sl.registerFactoryParam<PrintNotifier, void, void>(
-    (param1, param2) => PrintNotifier(),
-  );
-  sl.registerFactoryParam<ProfilNotifier, void, void>(
-    (param1, param2) => ProfilNotifier(),
   );
 }
