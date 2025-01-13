@@ -14,7 +14,7 @@ class InputOrderNotifier extends AppProvider{
 
   bool _isShowCustomer = true;
   HashMap<String, String> _errorCustomer = HashMap();
-  // List<ProductItemOrderEntity> _listOrderItem = [];
+  List<ProductItemOrderEntity> _listOrderItem = [];
   final List<DropdownMenuEntry<String>> _genderListDropdown = [
     DropdownMenuEntry<String>(value: 'male', label: 'Laki-laki'),
     DropdownMenuEntry<String>(value: 'female', label: 'Perempuan')
@@ -29,7 +29,7 @@ class InputOrderNotifier extends AppProvider{
 
   bool get isShowCustomer => _isShowCustomer;
   HashMap<String, String> get errorCustomer => _errorCustomer;
-  // List<ProductItemOrderEntity> get listOrderItem => _listOrderItem;
+  List<ProductItemOrderEntity> get listOrderItem => _listOrderItem;
   List<DropdownMenuEntry<String>> get genderListDropdown => _genderListDropdown;
 
   TextEditingController get nameController => _nameController;
@@ -57,4 +57,63 @@ class InputOrderNotifier extends AppProvider{
       _errorCustomer[GENDER] = 'Jenis Kelamin harus diisi';
     hideLoading();
   }
+
+  updateItems(List<ProductItemOrderEntity> param) {
+    _listOrderItem.clear();
+    _listOrderItem.addAll(param);
+    notifyListeners();
+  }
+
+  updateQuantity(ProductItemOrderEntity item, int newQuantity) {
+    final index = _listOrderItem.indexOf(item);
+    if (newQuantity == 0) {
+      _listOrderItem.removeAt(index);
+    } else {
+      _listOrderItem[index] =
+          _listOrderItem[index].copyWith(quantity: newQuantity);
+    }
+    notifyListeners();
+  }
+
+  // scan(String barcodeText) async {
+  //   _getProductByBarcode(barcodeText);
+  // }
+
+  // _getProductByBarcode(String param) async {
+  //   showLoading();
+  //   final respone = await _productGetByBarcodeUseCase(param: param);
+  //   if (respone.success) {
+  //     final product = respone.data!;
+  //     final index = _listOrderItem.indexWhere(
+  //       (element) => element.id == product.id,
+  //     );
+  //     if (index >= 0) {
+  //       final item = _listOrderItem[index];
+  //       if (item.stock != null &&
+  //           item.stock! > 0 &&
+  //           item.stock! > item.quantity) {
+  //         _listOrderItem[index] = item.copyWith(quantity: item.quantity + 1);
+  //       } else {
+  //         snackBarMessage =
+  //             'Stok produk ${item.name} (#${item.barcode}) tidak mencukupi';
+  //       }
+  //     } else {
+  //       if (product.stock > 0) {
+  //         _listOrderItem.add(ProductItemOrderEntity(
+  //             id: product.id,
+  //             name: product.name,
+  //             quantity: 1,
+  //             price: product.price,
+  //             barcode: product.barcode,
+  //             stock: product.stock));
+  //       } else {
+  //         snackBarMessage =
+  //             'Stok produk ${product.name} (#${product.barcode}) kosong';
+  //       }
+  //     }
+  //   } else {
+  //     snackBarMessage = respone.message;
+  //   }
+  //   hideLoading();
+  // }
 }

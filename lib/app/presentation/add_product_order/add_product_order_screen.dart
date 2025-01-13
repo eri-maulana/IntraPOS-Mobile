@@ -2,12 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/material/app_bar.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:intrapos_mobile/app/domain/entity/product.dart';
 import 'package:intrapos_mobile/app/presentation/add_product_order/add_product_order_notifier.dart';
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
+import 'package:intrapos_mobile/core/helper/number_helper.dart';
 import 'package:intrapos_mobile/core/widget/app_widget.dart';
 
-class AddProductOrderScreen
-    extends AppWidget<AddProductOrderNotifier, void, void> {
+class AddProductOrderScreen extends AppWidget<AddProductOrderNotifier,
+    List<ProductItemOrderEntity>, void> {
+  AddProductOrderScreen({required super.param1});
+  
   @override
   AppBar? appBarBuild(BuildContext context) {
     return AppBar(
@@ -44,17 +48,17 @@ class AddProductOrderScreen
               height: 10,
             ),
             Expanded(
-              child: ListView.separated(
-                
-                separatorBuilder: (context, index) => SizedBox(
-                  height: 5,
-                ),
-                itemCount: 15,
-                itemBuilder: (context, index) {
-                  return _itemOrderLayout(context);
-                },
+            child: ListView.separated(
+              separatorBuilder: (context, index) => SizedBox(
+                height: 5,
               ),
+              itemCount: notifier.listOrderItem.length,
+              itemBuilder: (context, index) {
+                final item = notifier.listOrderItem[index];
+                return _itemOrderLayout(context, item);
+              },
             ),
+          ),
             SizedBox(
               height: 10,
             ),
@@ -62,7 +66,7 @@ class AddProductOrderScreen
               children: [
                 Expanded(
                   child: Text(
-                    '2 Item',
+                    '${notifier.totalProduct} Item',
                     style: GlobalHelper.getTextTheme(context,
                         appTextStyle: AppTextStyle.TITLE_MEDIUM),
                   ),
@@ -71,7 +75,7 @@ class AddProductOrderScreen
                   width: 5,
                 ),
                 FilledButton(
-                  onPressed: () {},
+                  onPressed: () => _onPressSave(context),
                   child: Text('Simpan'),
                 ),
               ],
@@ -82,65 +86,98 @@ class AddProductOrderScreen
     );
   }
 
-  _itemOrderLayout(BuildContext context) {
+  _itemOrderLayout(BuildContext context, ProductItemOrderEntity item) {
     return Container(
-        padding: EdgeInsets.all(5),
-        decoration: BoxDecoration(
-            border: Border.all(
-                color: GlobalHelper.getColorScheme(context).shadow, width: 1),
-            borderRadius: BorderRadius.circular(10)),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                    child: Text(
-                  'nama_produk',
-                  style: GlobalHelper.getTextTheme(context,
-                      appTextStyle: AppTextStyle.LABEL_LARGE),
-                )),
-                Text(
-                  'Rp. 1.000.000',
-                  style: GlobalHelper.getTextTheme(context,
-                          appTextStyle: AppTextStyle.BODY_LARGE)
-                      ?.copyWith(
-                          color: GlobalHelper.getColorScheme(context).primary,
-                          fontWeight: FontWeight.bold),
-                )
-              ],
-            ),
-            Row(
-              children: [
-                Text(
-                  'Stok: 50',
-                  style: GlobalHelper.getTextTheme(context,
-                      appTextStyle: AppTextStyle.LABEL_MEDIUM),
-                ),
-                Expanded(child: SizedBox()),
-                IconButton.outlined(onPressed: () {}, icon: Icon(Icons.remove)),
-                SizedBox(
-                  width: 5,
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                          color: GlobalHelper.getColorScheme(context).shadow,
-                          width: 0.5),
-                      borderRadius: BorderRadius.circular(4)),
+      padding: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+          border: Border.all(
+              color: GlobalHelper.getColorScheme(context).shadow, width: 1),
+          borderRadius: BorderRadius.circular(10)),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
                   child: Text(
-                    '1',
-                    style: GlobalHelper.getTextTheme(context,
-                        appTextStyle: AppTextStyle.BODY_LARGE),
-                  ),
+                item.name,
+                style: GlobalHelper.getTextTheme(context,
+                    appTextStyle: AppTextStyle.LABEL_LARGE),
+              )),
+              Text(
+                NumberHelper.formatIdr(item.price),
+                style: GlobalHelper.getTextTheme(context,
+                        appTextStyle: AppTextStyle.BODY_LARGE)
+                    ?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: GlobalHelper.getColorScheme(context).primary),
+              )
+            ],
+          ),
+          Row(
+            children: [
+              Text(
+                'Stok : ${item.stock}',
+                style: GlobalHelper.getTextTheme(context,
+                    appTextStyle: AppTextStyle.BODY_MEDIUM),
+              ),
+              Expanded(child: SizedBox()),
+              IconButton.outlined(
+                  onPressed: (item.quantity > 0)
+                      ? () => _onPressRemoveQuantity(item)
+                      : null,
+                  icon: Icon(Icons.remove)),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: GlobalHelper.getColorScheme(context).shadow,
+                        width: 0.5),
+                    borderRadius: BorderRadius.circular(4)),
+                child: Text(
+                  item.quantity.toString(),
+                  style: GlobalHelper.getTextTheme(context,
+                      appTextStyle: AppTextStyle.BODY_LARGE),
                 ),
-                SizedBox(
-                  width: 5,
-                ),
-                IconButton.outlined(onPressed: () {}, icon: Icon(Icons.add)),
-              ],
-            )
-          ],
-        ));
+              ),
+              IconButton.outlined(
+                  onPressed: (item.stock != null &&
+                          item.stock! > 0 &&
+                          item.stock! > item.quantity)
+                      ? () => _onPressAddQuantity(item)
+                      : null,
+                  icon: Icon(Icons.add))
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  _onSubmitSearch() {
+    notifier.submitSearch();
+  }
+
+  // _onPressClearSearch() {
+  //   notifier.clearSearch();
+  // }
+
+  // _onPressScan(BuildContext context) {
+  //   QrBarCodeScannerDialog().getScannedQrBarCode(
+  //       context: context,
+  //       onCode: (code) {
+  //         notifier.scan(code ?? '');
+  //       });
+  // }
+
+  _onPressAddQuantity(ProductItemOrderEntity item) {
+    notifier.updateQuantity(item, item.quantity + 1);
+  }
+
+  _onPressRemoveQuantity(ProductItemOrderEntity item) {
+    notifier.updateQuantity(item, item.quantity - 1);
+  }
+
+  _onPressSave(BuildContext context) {
+    Navigator.pop(context, notifier.listOrderItemFilteredQuantity);
   }
 }

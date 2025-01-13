@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/material/app_bar.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:intrapos_mobile/app/domain/entity/product.dart';
 import 'package:intrapos_mobile/app/presentation/add_product_order/add_product_order_screen.dart';
 import 'package:intrapos_mobile/app/presentation/checkout/checkout_screen.dart';
 import 'package:intrapos_mobile/app/presentation/input_order/input_order_notifier.dart';
 import 'package:intrapos_mobile/core/helper/date_time_helper.dart';
 import 'package:intrapos_mobile/core/helper/dialog_helper.dart';
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
+import 'package:intrapos_mobile/core/helper/number_helper.dart';
 import 'package:intrapos_mobile/core/widget/app_widget.dart';
 
 class InputOrderScreen extends AppWidget<InputOrderNotifier, void, void> {
@@ -51,15 +53,16 @@ class InputOrderScreen extends AppWidget<InputOrderNotifier, void, void> {
           SizedBox(
             height: 10,
           ),
-          ListView.separated(
-            physics: NeverScrollableScrollPhysics(),
+         ListView.separated(
             shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
             separatorBuilder: (context, index) => SizedBox(
               height: 5,
             ),
-            itemCount: 10,
+            itemCount: notifier.listOrderItem.length,
             itemBuilder: (context, index) {
-              return _itemOrderLayout(context);
+              final item = notifier.listOrderItem[index];
+              return _itemOrderLayout(context, item);
             },
           ),
           SizedBox(
@@ -84,7 +87,7 @@ class InputOrderScreen extends AppWidget<InputOrderNotifier, void, void> {
     }
   }
 
-  _itemOrderLayout(BuildContext context) {
+  _itemOrderLayout(BuildContext context, ProductItemOrderEntity item) {
     return Container(
         padding: EdgeInsets.all(5),
         decoration: BoxDecoration(
@@ -97,12 +100,12 @@ class InputOrderScreen extends AppWidget<InputOrderNotifier, void, void> {
               children: [
                 Expanded(
                     child: Text(
-                  'nama_produk',
+                  item.name,
                   style: GlobalHelper.getTextTheme(context,
                       appTextStyle: AppTextStyle.LABEL_LARGE),
                 )),
                 Text(
-                  'Rp. 1.000.000',
+                  NumberHelper.formatIdr(item.price),
                   style: GlobalHelper.getTextTheme(context,
                           appTextStyle: AppTextStyle.BODY_LARGE)
                       ?.copyWith(
@@ -114,12 +117,14 @@ class InputOrderScreen extends AppWidget<InputOrderNotifier, void, void> {
             Row(
               children: [
                 Text(
-                  'Stok: 50',
+                  'Stok: ${item.stock}',
                   style: GlobalHelper.getTextTheme(context,
                       appTextStyle: AppTextStyle.LABEL_MEDIUM),
                 ),
                 Expanded(child: SizedBox()),
-                IconButton.outlined(onPressed: () {}, icon: Icon(Icons.remove)),
+                IconButton.outlined(
+                  onPressed: () => _onPressRemoveQuantity(item),
+                  icon: Icon(Icons.remove)),
                 SizedBox(
                   width: 5,
                 ),
@@ -131,7 +136,7 @@ class InputOrderScreen extends AppWidget<InputOrderNotifier, void, void> {
                           width: 0.5),
                       borderRadius: BorderRadius.circular(4)),
                   child: Text(
-                    '1',
+                    item.quantity.toString(),
                     style: GlobalHelper.getTextTheme(context,
                         appTextStyle: AppTextStyle.BODY_LARGE),
                   ),
@@ -139,7 +144,13 @@ class InputOrderScreen extends AppWidget<InputOrderNotifier, void, void> {
                 SizedBox(
                   width: 5,
                 ),
-                IconButton.outlined(onPressed: () {}, icon: Icon(Icons.add)),
+                IconButton.outlined(
+                  onPressed: (item.stock != null &&
+                          item.stock! > 0 &&
+                          item.stock! > item.quantity)
+                      ? () => _onPressAddQuantity(item)
+                      : null,
+                  icon: Icon(Icons.add))
               ],
             )
           ],
@@ -233,12 +244,30 @@ class InputOrderScreen extends AppWidget<InputOrderNotifier, void, void> {
   }
 
   _onPressAddProduct(BuildContext context) async {
-    await Navigator.push(
+    final List<ProductItemOrderEntity>? items = await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => AddProductOrderScreen(),
+          builder: (context) => AddProductOrderScreen(
+            param1: notifier.listOrderItem,
+          ),
         ));
-    notifier.init();
+    if (items != null) notifier.updateItems(items);
+  }
+
+  // _onPressBarcode(BuildContext context) {
+  //   QrBarCodeScannerDialog().getScannedQrBarCode(
+  //       context: context,
+  //       onCode: (code) {
+  //         notifier.scan(code ?? '');
+  //       });
+  // }
+
+  _onPressRemoveQuantity(ProductItemOrderEntity item) {
+    notifier.updateQuantity(item, item.quantity - 1);
+  }
+
+  _onPressAddQuantity(ProductItemOrderEntity item) {
+    notifier.updateQuantity(item, item.quantity + 1);
   }
 
   _onPressCheckout(BuildContext context) {

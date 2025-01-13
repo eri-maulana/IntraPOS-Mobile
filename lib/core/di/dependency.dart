@@ -19,6 +19,7 @@ import 'package:intrapos_mobile/app/domain/repository/setting_repository.dart';
 import 'package:intrapos_mobile/app/domain/usecase/auth_login.dart';
 import 'package:intrapos_mobile/app/domain/usecase/order_get_all.dart';
 import 'package:intrapos_mobile/app/domain/usecase/order_get_today.dart';
+import 'package:intrapos_mobile/app/domain/usecase/product_get_all.dart';
 import 'package:intrapos_mobile/app/presentation/add_product_order/add_product_order_notifier.dart';
 import 'package:intrapos_mobile/app/presentation/checkout/checkout_notifier.dart';
 import 'package:intrapos_mobile/app/presentation/home/home_notifier.dart';
@@ -48,15 +49,18 @@ void initDependency() {
   //api service
   sl.registerSingleton<AuthApiService>(AuthApiService(sl()));
   sl.registerSingleton<OrderApiService>(OrderApiService(sl()));
+  sl.registerSingleton<ProductApiService>(ProductApiService(sl()));
 
   //repository
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl()));
   sl.registerSingleton<OrderRepository>(OrderRepositoryImpl(sl()));
+  sl.registerSingleton<ProductRepository>(ProductRepositoryImpl(sl()));
 
   //use case
   sl.registerSingleton<AuthLoginUseCase>(AuthLoginUseCase(sl()));
   sl.registerSingleton<OrderGetTodayUseCase>(OrderGetTodayUseCase(sl()));
   sl.registerSingleton<OrderGetAllUseCase>(OrderGetAllUseCase(sl()));
+  sl.registerSingleton<ProductGetAllUseCase>(ProductGetAllUseCase(sl()));
   
 
   //presentation
@@ -72,5 +76,9 @@ void initDependency() {
   
   sl.registerFactoryParam<InputOrderNotifier, void, void>(
     (param1, param2) => InputOrderNotifier(),
+  );
+  sl.registerFactoryParam<AddProductOrderNotifier, List<ProductItemOrderEntity>,
+      void>(
+    (param1, param2) => AddProductOrderNotifier(param1, sl()),
   );
 }
