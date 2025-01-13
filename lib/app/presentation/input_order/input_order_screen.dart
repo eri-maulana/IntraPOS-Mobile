@@ -15,7 +15,7 @@ class InputOrderScreen extends AppWidget<InputOrderNotifier, void, void> {
   @override
   AppBar? appBarBuild(BuildContext context) {
     return AppBar(
-      title: Text('Buat Order'),
+      title: Text('Buat Pesanan'),
       actions: [
         IconButton(
             onPressed: () => _showDialogCustomer(context),

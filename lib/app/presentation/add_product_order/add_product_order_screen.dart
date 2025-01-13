@@ -11,7 +11,7 @@ import 'package:intrapos_mobile/core/widget/app_widget.dart';
 class AddProductOrderScreen extends AppWidget<AddProductOrderNotifier,
     List<ProductItemOrderEntity>, void> {
   AddProductOrderScreen({required super.param1});
-  
+
   @override
   AppBar? appBarBuild(BuildContext context) {
     return AppBar(
@@ -29,12 +29,17 @@ class AddProductOrderScreen extends AppWidget<AddProductOrderNotifier,
             Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                        label: Text('Cari Produk'),
-                        border: OutlineInputBorder()),
-                  ),
-                ),
+                    child: TextField(
+                  controller: notifier.searchController,
+                  decoration: InputDecoration(
+                      hintText: 'Tuliskan nama atau barcode produk',
+                      label: Text('Cari Produk'),
+                      border: OutlineInputBorder(),
+                      suffixIcon: IconButton(
+                          onPressed: () => _onPressClearSearch(),
+                          icon: Icon(Icons.clear))),
+                  onSubmitted: (value) => _onSubmitSearch(),
+                )),
                 SizedBox(
                   width: 5,
                 ),
@@ -48,17 +53,17 @@ class AddProductOrderScreen extends AppWidget<AddProductOrderNotifier,
               height: 10,
             ),
             Expanded(
-            child: ListView.separated(
-              separatorBuilder: (context, index) => SizedBox(
-                height: 5,
+              child: ListView.separated(
+                separatorBuilder: (context, index) => SizedBox(
+                  height: 5,
+                ),
+                itemCount: notifier.listOrderItem.length,
+                itemBuilder: (context, index) {
+                  final item = notifier.listOrderItem[index];
+                  return _itemOrderLayout(context, item);
+                },
               ),
-              itemCount: notifier.listOrderItem.length,
-              itemBuilder: (context, index) {
-                final item = notifier.listOrderItem[index];
-                return _itemOrderLayout(context, item);
-              },
             ),
-          ),
             SizedBox(
               height: 10,
             ),
@@ -157,9 +162,9 @@ class AddProductOrderScreen extends AppWidget<AddProductOrderNotifier,
     notifier.submitSearch();
   }
 
-  // _onPressClearSearch() {
-  //   notifier.clearSearch();
-  // }
+  _onPressClearSearch() {
+    notifier.clearSearch();
+  }
 
   // _onPressScan(BuildContext context) {
   //   QrBarCodeScannerDialog().getScannedQrBarCode(

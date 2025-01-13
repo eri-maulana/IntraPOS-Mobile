@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:intrapos_mobile/app/domain/entity/product.dart';
 import 'package:intrapos_mobile/app/domain/usecase/product_get_all.dart';
 import 'package:intrapos_mobile/core/provider/app_provider.dart';
@@ -11,23 +12,28 @@ class AddProductOrderNotifier extends AppProvider{
     init();
   }
 
+  TextEditingController _searchController = TextEditingController();
+
   List<ProductItemOrderEntity> _listOrderItem = [];
 
+  TextEditingController get searchController => _searchController;
+
+
   List<ProductItemOrderEntity> get listOrderItem {
-    // if (_searchController.text.isEmpty)
+    if (_searchController.text.isEmpty)
       return _listOrderItem;
-    // else {
-    //   return _listOrderItem
-    //       .where((element) =>
-    //           element.name
-    //               .toUpperCase()
-    //               .contains(_searchController.text.toUpperCase()) ||
-    //           (element.barcode
-    //                   ?.toUpperCase()
-    //                   .contains(_searchController.text.toUpperCase()) ??
-    //               false))
-    //       .toList();
-    // }
+    else {
+      return _listOrderItem
+          .where((element) =>
+              element.name
+                  .toUpperCase()
+                  .contains(_searchController.text.toUpperCase()) ||
+              (element.barcode
+                      ?.toUpperCase()
+                      .contains(_searchController.text.toUpperCase()) ??
+                  false))
+          .toList();
+    }
   }
 
   List<ProductItemOrderEntity> get listOrderItemFilteredQuantity {
@@ -83,10 +89,10 @@ class AddProductOrderNotifier extends AppProvider{
     notifyListeners();
   }
 
-  // clearSearch() {
-  //   _searchController.text = '';
-  //   notifyListeners();
-  // }
+  clearSearch() {
+    _searchController.text = '';
+    notifyListeners();
+  }
 
   updateQuantity(ProductItemOrderEntity item, int newQuantity) {
     final index = _listOrderItem.indexOf(item);
