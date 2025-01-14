@@ -10,6 +10,7 @@ import 'package:intrapos_mobile/core/helper/dialog_helper.dart';
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
 import 'package:intrapos_mobile/core/helper/number_helper.dart';
 import 'package:intrapos_mobile/core/widget/app_widget.dart';
+import 'package:qr_bar_code_scanner_dialog/qr_bar_code_scanner_dialog.dart';
 
 class InputOrderScreen extends AppWidget<InputOrderNotifier, void, void> {
   @override
@@ -43,7 +44,7 @@ class InputOrderScreen extends AppWidget<InputOrderNotifier, void, void> {
                 ),
               ),
               IconButton.outlined(
-                  onPressed: () {}, icon: Icon(Icons.qr_code_scanner)),
+                  onPressed: () => _onPressBarcode(context), icon: Icon(Icons.qr_code_scanner)),
               Padding(padding: EdgeInsets.all(5)),
               IconButton.filled(
                   onPressed: () => _onPressAddProduct(context),
@@ -254,13 +255,13 @@ class InputOrderScreen extends AppWidget<InputOrderNotifier, void, void> {
     if (items != null) notifier.updateItems(items);
   }
 
-  // _onPressBarcode(BuildContext context) {
-  //   QrBarCodeScannerDialog().getScannedQrBarCode(
-  //       context: context,
-  //       onCode: (code) {
-  //         notifier.scan(code ?? '');
-  //       });
-  // }
+  _onPressBarcode(BuildContext context) {
+    QrBarCodeScannerDialog().getScannedQrBarCode(
+        context: context,
+        onCode: (code) {
+          notifier.scan(code ?? '');
+        });
+  }
 
   _onPressRemoveQuantity(ProductItemOrderEntity item) {
     notifier.updateQuantity(item, item.quantity - 1);

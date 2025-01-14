@@ -20,6 +20,7 @@ import 'package:intrapos_mobile/app/domain/usecase/auth_login.dart';
 import 'package:intrapos_mobile/app/domain/usecase/order_get_all.dart';
 import 'package:intrapos_mobile/app/domain/usecase/order_get_today.dart';
 import 'package:intrapos_mobile/app/domain/usecase/product_get_all.dart';
+import 'package:intrapos_mobile/app/domain/usecase/product_get_by_barcode.dart';
 import 'package:intrapos_mobile/app/presentation/add_product_order/add_product_order_notifier.dart';
 import 'package:intrapos_mobile/app/presentation/checkout/checkout_notifier.dart';
 import 'package:intrapos_mobile/app/presentation/home/home_notifier.dart';
@@ -61,7 +62,7 @@ void initDependency() {
   sl.registerSingleton<OrderGetTodayUseCase>(OrderGetTodayUseCase(sl()));
   sl.registerSingleton<OrderGetAllUseCase>(OrderGetAllUseCase(sl()));
   sl.registerSingleton<ProductGetAllUseCase>(ProductGetAllUseCase(sl()));
-  
+  sl.registerSingleton<ProductGetByBarcodeUseCase>(ProductGetByBarcodeUseCase(sl()));
 
   //presentation
   sl.registerFactoryParam<LoginNotifier, void, void>(
@@ -73,9 +74,9 @@ void initDependency() {
   sl.registerFactoryParam<OrderNotifier, void, void>(
     (param1, param2) => OrderNotifier(sl()),
   );
-  
+
   sl.registerFactoryParam<InputOrderNotifier, void, void>(
-    (param1, param2) => InputOrderNotifier(),
+    (param1, param2) => InputOrderNotifier(sl()),
   );
   sl.registerFactoryParam<AddProductOrderNotifier, List<ProductItemOrderEntity>,
       void>(

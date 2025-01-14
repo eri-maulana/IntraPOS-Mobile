@@ -103,11 +103,11 @@ class AddProductOrderNotifier extends AppProvider{
     notifyListeners();
   }
 
-  // scan(String barcodeText) async {
-  //   _searchController.text = barcodeText;
-  //   _updateQuantityFromBarcode(barcodeText);
-  //   notifyListeners();
-  // }
+  scan(String barcodeText) async {
+    _searchController.text = barcodeText;
+    _updateQuantityFromBarcode(barcodeText);
+    notifyListeners();
+  }
 
    _updateQuantityFromBarcode(String param) {
     final index = _listOrderItem.indexWhere(

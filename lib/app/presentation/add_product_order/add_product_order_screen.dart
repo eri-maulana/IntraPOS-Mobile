@@ -7,6 +7,7 @@ import 'package:intrapos_mobile/app/presentation/add_product_order/add_product_o
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
 import 'package:intrapos_mobile/core/helper/number_helper.dart';
 import 'package:intrapos_mobile/core/widget/app_widget.dart';
+import 'package:qr_bar_code_scanner_dialog/qr_bar_code_scanner_dialog.dart';
 
 class AddProductOrderScreen extends AppWidget<AddProductOrderNotifier,
     List<ProductItemOrderEntity>, void> {
@@ -44,7 +45,7 @@ class AddProductOrderScreen extends AppWidget<AddProductOrderNotifier,
                   width: 5,
                 ),
                 IconButton.outlined(
-                  onPressed: () {},
+                  onPressed: () => _onPressScan(context),
                   icon: Icon(Icons.qr_code_scanner),
                 ),
               ],
@@ -166,13 +167,13 @@ class AddProductOrderScreen extends AppWidget<AddProductOrderNotifier,
     notifier.clearSearch();
   }
 
-  // _onPressScan(BuildContext context) {
-  //   QrBarCodeScannerDialog().getScannedQrBarCode(
-  //       context: context,
-  //       onCode: (code) {
-  //         notifier.scan(code ?? '');
-  //       });
-  // }
+  _onPressScan(BuildContext context) {
+    QrBarCodeScannerDialog().getScannedQrBarCode(
+        context: context,
+        onCode: (code) {
+          notifier.scan(code ?? '');
+        });
+  }
 
   _onPressAddQuantity(ProductItemOrderEntity item) {
     notifier.updateQuantity(item, item.quantity + 1);
