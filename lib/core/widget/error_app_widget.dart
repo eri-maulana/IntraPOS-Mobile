@@ -1,4 +1,5 @@
 // import 'package:intrapos_mobile/app/presentation/login/login_screen.dart';
+import 'package:intrapos_mobile/app/presentation/login/login_screen.dart';
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
 import 'package:intrapos_mobile/core/helper/shared_preferences.dart';
 import 'package:flutter/material.dart';
@@ -42,11 +43,25 @@ class ErrorAppWidget extends StatelessWidget {
               SizedBox(
                 height: 30,
               ),
-              FilledButton.icon(
-                onPressed: onPressButton,
-                label: Text('Muat ulang'),
-                icon: Icon(Icons.refresh),
-              )
+              (description.contains('401') ||
+                      description.toLowerCase().contains('unauthenticated'))
+                  ? FilledButton(
+                      onPressed: () async {
+                        await SharedPreferencesHelper.logout();
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginScreen(),
+                          ),
+                          (route) => false,
+                        );
+                      },
+                      child: Text('Logout'))
+                  : FilledButton.icon(
+                      onPressed: onPressButton,
+                      label: Text('Muat ulang'),
+                      icon: Icon(Icons.refresh),
+                    )
             ],
           ),
         ),
@@ -54,3 +69,4 @@ class ErrorAppWidget extends StatelessWidget {
     );
   }
 }
+
