@@ -39,7 +39,7 @@ class ProfilScreen extends AppWidget<ProfilNotifier, void, void> {
           radius: 60,
           backgroundColor: GlobalHelper.getColorScheme(context).primary,
           child: Text(
-            'A',
+            notifier.name.substring(0,1),
             style: GlobalHelper.getTextTheme(context,
                     appTextStyle: AppTextStyle.DISPLAY_MEDIUM)
                 ?.copyWith(
@@ -51,7 +51,7 @@ class ProfilScreen extends AppWidget<ProfilNotifier, void, void> {
           height: 20,
         ),
         Text(
-          'Admin',
+          notifier.name,
           style: GlobalHelper.getTextTheme(context,
                   appTextStyle: AppTextStyle.TITLE_LARGE)
               ?.copyWith(
@@ -62,7 +62,7 @@ class ProfilScreen extends AppWidget<ProfilNotifier, void, void> {
           height: 5,
         ),
         Text(
-          'eri@maulana.com',
+          notifier.email,
           style: GlobalHelper.getTextTheme(context,
                   appTextStyle: AppTextStyle.BODY_SMALL)
               ?.copyWith(color: GlobalHelper.getColorScheme(context).secondary),

@@ -102,4 +102,7 @@ void initDependency() {
   sl.registerFactoryParam<PrintNotifier, OrderEntity, void>(
     (param1, param2) => PrintNotifier(param1, sl()),
   );
+  sl.registerFactoryParam<ProfilNotifier, void, void>(
+    (param1, param2) => ProfilNotifier(),
+  );
 }
