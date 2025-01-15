@@ -27,10 +27,10 @@ class ProfilNotifier extends AppProvider {
     hideLoading();
   }
 
-  // logout() async {
-  //   showLoading();
-  //   await SharedPreferencesHelper.logout();
-  //   _isLogout = true;
-  //   hideLoading();
-  // }
+  logout() async {
+    showLoading();
+    await SharedPreferencesHelper.logout();
+    _isLogout = true;
+    hideLoading();
+  }
 }

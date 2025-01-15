@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/material/app_bar.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:intrapos_mobile/app/presentation/login/login_screen.dart';
 import 'package:intrapos_mobile/app/presentation/profil/profil_notifier.dart';
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
 import 'package:intrapos_mobile/core/widget/app_widget.dart';
@@ -22,11 +23,24 @@ class ProfilScreen extends AppWidget<ProfilNotifier, void, void> {
             _headerLayout(context),
             Container(
                 width: double.maxFinite,
-                child: ElevatedButton(onPressed: () {}, child: Text('Logout')))
+                child: ElevatedButton(onPressed: () => _onPressLogout(), child: Text('Logout')))
           ],
         ),
       ),
     );
+  }
+
+  @override
+  checkVariable(BuildContext context) {
+    if (notifier.isLogout) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ),
+        (route) => false,
+      );
+    }
   }
 
   _headerLayout(BuildContext context) {
@@ -72,5 +86,9 @@ class ProfilScreen extends AppWidget<ProfilNotifier, void, void> {
         ),
       ],
     );
+  }
+
+  _onPressLogout() {
+    notifier.logout();
   }
 }
