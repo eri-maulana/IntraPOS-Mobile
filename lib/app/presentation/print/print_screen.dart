@@ -2,11 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/material/app_bar.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:intrapos_mobile/app/domain/entity/order.dart';
 import 'package:intrapos_mobile/app/presentation/print/print_notifier.dart';
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
 import 'package:intrapos_mobile/core/widget/app_widget.dart';
+import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 
-class PrintScreen extends AppWidget<PrintNotifier, void, void> {
+class PrintScreen extends AppWidget<PrintNotifier, OrderEntity, void> {
+  PrintScreen({required super.param1});
+
   @override
   AppBar? appBarBuild(BuildContext context) {
     return AppBar(
@@ -17,49 +21,40 @@ class PrintScreen extends AppWidget<PrintNotifier, void, void> {
   @override
   Widget bodyBuild(BuildContext context) {
     return SafeArea(
-      child: Container(
-        padding: EdgeInsets.all(10),
-        width: double.maxFinite,
-        child: Column(
-          children: [
-            SizedBox(
-              height: 40,
-            ),
-            Icon(
-              Icons.check_circle,
-              size: 75,
-              color: Colors.green,
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              'Order Berhasil Disimpan',
-              style: GlobalHelper.getTextTheme(context,
-                  appTextStyle: AppTextStyle.HEADLINE_SMALL),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            _deviceLayout(
-              context,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-          ],
-        ),
+        child: Container(
+      padding: EdgeInsets.all(10),
+      width: double.maxFinite,
+      child: Column(
+        children: [
+          SizedBox(
+            height: 40,
+          ),
+          Icon(
+            Icons.check_circle,
+            size: 75,
+            color: Colors.green,
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            'Order berhasil disimpan',
+            style: GlobalHelper.getTextTheme(context,
+                appTextStyle: AppTextStyle.HEADLINE_SMALL),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          _deviceLayout(context)
+        ],
       ),
-    );
+    ));
   }
 
   _deviceLayout(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          height: 30,
-        ),
         Text(
           'Daftar Printer',
           style: GlobalHelper.getTextTheme(context,
@@ -71,52 +66,49 @@ class PrintScreen extends AppWidget<PrintNotifier, void, void> {
         ListView.separated(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          separatorBuilder: (context, index) => SizedBox(),
-          itemCount: 3,
+          separatorBuilder: (context, index) => SizedBox(
+            height: 5,
+          ),
+          itemCount: notifier.listBluetooth.length,
           itemBuilder: (context, index) {
-            return _itemDeviceLayout(context);
+            final item = notifier.listBluetooth[index];
+            return _itemDeviceLayout(context, item);
           },
-        ),
+        )
       ],
     );
   }
 
-  _itemDeviceLayout(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(5),
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
+  _itemDeviceLayout(BuildContext context, BluetoothInfo item) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
           border: Border.all(
-            color: GlobalHelper.getColorScheme(context).shadow,
-            width: 0.5,
+              color: GlobalHelper.getColorScheme(context).shadow, width: 0.5),
+          borderRadius: BorderRadius.circular(10)),
+      child: Row(
+        children: [
+          Icon(Icons.bluetooth_connected),
+          SizedBox(
+            width: 10,
           ),
-          borderRadius: BorderRadius.circular(
-            10,
-          ),
-        ),
-        child: Row(
-          children: [
-            Icon(Icons.bluetooth_connected),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
+          Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [Text('Nama'), Text('Alamat Perangkat')],
-              ),
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            FilledButton(
-              onPressed: () {},
-              child: Text('Print'),
-            ),
-          ],
-        ),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [Text(item.name), Text(item.macAdress)],
+          )),
+          SizedBox(
+            width: 5,
+          ),
+          FilledButton(
+              onPressed: () => _onPressPrint(item), child: Text('Print'))
+        ],
       ),
     );
   }
+
+  _onPressPrint(BluetoothInfo item) {
+    notifier.print(item.macAdress);
+  }
 }
+

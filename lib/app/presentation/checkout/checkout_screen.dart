@@ -55,7 +55,7 @@ class CheckoutScreen extends AppWidget<CheckoutNotifier, OrderEntity, void> {
           context,
           MaterialPageRoute(
             builder: (context) => PrintScreen(
-              // param1: notifier.order.id,
+              param1: notifier.order,
             ),
           ));
       Navigator.pop(context, true);
