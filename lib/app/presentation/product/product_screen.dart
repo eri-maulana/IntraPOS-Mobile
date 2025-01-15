@@ -77,7 +77,7 @@ class ProductScreen extends AppWidget<ProductNotifier, void, void> {
                           appTextStyle: AppTextStyle.LABEL_MEDIUM),
                     ),
                     Text(
-                      (item.isActive) ? 'Aktif' : 'Tidak aktif',
+                      (item.isActive) ? 'Aktif' : 'Tidak Aktif',
                       style: GlobalHelper.getTextTheme(context,
                               appTextStyle: AppTextStyle.LABEL_MEDIUM)
                           ?.copyWith(
