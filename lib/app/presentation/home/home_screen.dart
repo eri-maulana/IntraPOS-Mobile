@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intrapos_mobile/app/domain/entity/order.dart';
+import 'package:intrapos_mobile/app/presentation/detail_order/detail_order_screen.dart';
 import 'package:intrapos_mobile/app/presentation/home/home_notifier.dart';
 import 'package:intrapos_mobile/app/presentation/input_order/input_order_screen.dart';
 import 'package:intrapos_mobile/app/presentation/order/order_screen.dart';
@@ -141,7 +142,9 @@ class HomeScreen extends AppWidget<HomeNotifier, void, void> {
   }
 
   _itemOrderLayout(BuildContext context, OrderEntity item) {
-    return Container(
+    return InkWell(
+      onTap: () => _onPressItemOrder(context, item),
+      child: Container(
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(color: Colors.white),
         child: Column(
@@ -158,7 +161,9 @@ class HomeScreen extends AppWidget<HomeNotifier, void, void> {
                           fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  DateTimeHelper.formatDateTimeFromString(dateTimeString: item.updatedAt!, format: 'dd MMM yyyy HH:mm'),
+                  DateTimeHelper.formatDateTimeFromString(
+                      dateTimeString: item.updatedAt!,
+                      format: 'dd MMM yyyy HH:mm:ss'),
                   style: GlobalHelper.getTextTheme(context,
                           appTextStyle: AppTextStyle.BODY_SMALL)
                       ?.copyWith(
@@ -176,7 +181,7 @@ class HomeScreen extends AppWidget<HomeNotifier, void, void> {
                 Text(
                   '${NumberHelper.formatIdr(item.totalPrice!)} (${item.items.length} item)',
                   style: GlobalHelper.getTextTheme(context,
-                          appTextStyle: AppTextStyle.BODY_MEDIUM)
+                          appTextStyle: AppTextStyle.BODY_LARGE)
                       ?.copyWith(
                           color: GlobalHelper.getColorScheme(context).primary,
                           fontWeight: FontWeight.bold),
@@ -201,16 +206,17 @@ class HomeScreen extends AppWidget<HomeNotifier, void, void> {
               ],
             )
           ],
-        ));
+        ),
+      ),
+    );
   }
 
-  _onPressShowAllOrder(BuildContext context) async {
-    await Navigator.push(
+  _onPressAvatar(context) {
+    Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => OrderScreen(),
+          builder: (context) => ProfilScreen(),
         ));
-    notifier.init();
   }
 
   _onPressAddOrder(BuildContext context) async {
@@ -222,11 +228,22 @@ class HomeScreen extends AppWidget<HomeNotifier, void, void> {
     notifier.init();
   }
 
-  _onPressAvatar(BuildContext context) {
+  _onPressShowAllOrder(BuildContext context) async {
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OrderScreen(),
+        ));
+    notifier.init();
+  }
+
+  _onPressItemOrder(BuildContext context, OrderEntity item) {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ProfilScreen(),
+          builder: (context) => DetailOrderScreen(
+            param1: item.id,
+          ),
         ));
   }
 }

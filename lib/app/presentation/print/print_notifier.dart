@@ -134,7 +134,7 @@ class PrintNotifier extends AppProvider {
     bytes += ticket.hr(ch: '=');
     bytes += ticket.row([
       PosColumn(
-          text: 'Dibayar', width: 6, styles: PosStyles(align: PosAlign.right)),
+          text: 'Nominal Bayar', width: 6, styles: PosStyles(align: PosAlign.right)),
       PosColumn(
           text: NumberHelper.formatIdr(_orderEntity.paidAmount!),
           width: 6,

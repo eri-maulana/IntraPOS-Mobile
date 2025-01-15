@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:intrapos_mobile/app/domain/entity/order.dart';
 import 'package:intrapos_mobile/app/domain/entity/product.dart';
 import 'package:intrapos_mobile/app/presentation/checkout/checkout_notifier.dart';
+import 'package:intrapos_mobile/app/presentation/detail_order/detail_order_screen.dart';
 import 'package:intrapos_mobile/app/presentation/print/print_screen.dart';
 import 'package:intrapos_mobile/core/helper/date_time_helper.dart';
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
@@ -54,8 +55,8 @@ class CheckoutScreen extends AppWidget<CheckoutNotifier, OrderEntity, void> {
       await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PrintScreen(
-              param1: notifier.order,
+            builder: (context) => DetailOrderScreen(
+              param1: notifier.order.id,
             ),
           ));
       Navigator.pop(context, true);

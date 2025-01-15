@@ -19,7 +19,7 @@ class InputOrderScreen extends AppWidget<InputOrderNotifier, void, void> {
       title: Text('Buat Pesanan'),
       actions: [
         IconButton(
-            onPressed: () => _showDialogCustomer(context),
+             onPressed: () => _showDialogCustomer(context),
             icon: Icon(Icons.person))
       ],
     );
@@ -206,7 +206,7 @@ class InputOrderScreen extends AppWidget<InputOrderNotifier, void, void> {
               controller: notifier.phoneController,
               keyboardType: TextInputType.phone,
               decoration: InputDecoration(
-                  label: Text('No. Telp'), border: OutlineInputBorder()),
+                  label: Text('Telp'), border: OutlineInputBorder()),
             ),
             SizedBox(
               height: 10,
