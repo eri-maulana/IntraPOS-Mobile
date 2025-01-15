@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/material/app_bar.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:intrapos_mobile/app/presentation/login/login_screen.dart';
+import 'package:intrapos_mobile/app/presentation/product/product_screen.dart';
 import 'package:intrapos_mobile/app/presentation/profil/profil_notifier.dart';
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
 import 'package:intrapos_mobile/core/widget/app_widget.dart';
@@ -21,6 +22,15 @@ class ProfilScreen extends AppWidget<ProfilNotifier, void, void> {
         child: Column(
           children: [
             _headerLayout(context),
+          Container(
+            width: double.maxFinite,
+            child: FilledButton(
+                onPressed: () => _onPressProduct(context),
+                child: Text('Produk')),
+          ),
+          SizedBox(
+            height: 30,
+          ),
             Container(
                 width: double.maxFinite,
                 child: ElevatedButton(onPressed: () => _onPressLogout(), child: Text('Logout')))
@@ -86,6 +96,14 @@ class ProfilScreen extends AppWidget<ProfilNotifier, void, void> {
         ),
       ],
     );
+  }
+
+  _onPressProduct(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProductScreen(),
+        ));
   }
 
   _onPressLogout() {
