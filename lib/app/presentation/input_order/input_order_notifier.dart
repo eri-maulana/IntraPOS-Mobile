@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:intrapos_mobile/app/domain/entity/order.dart';
 import 'package:intrapos_mobile/app/domain/entity/product.dart';
 import 'package:intrapos_mobile/app/domain/usecase/product_get_by_barcode.dart';
 import 'package:intrapos_mobile/core/provider/app_provider.dart';
@@ -41,7 +42,24 @@ class InputOrderNotifier extends AppProvider {
   TextEditingController get phoneController => _phoneController;
   TextEditingController get birthdayController => _birthdayController;
 
-
+  OrderEntity get order {
+    final genderValue = (_genderController.text.isNotEmpty)
+        ? _genderListDropdown
+            .where(
+              (element) => element.label == _genderController.text,
+            )
+            .first
+            .value
+        : '';
+    return OrderEntity(
+        name: _nameController.text,
+        gender: genderValue,
+        email: _emailController.text,
+        phone: _phoneController.text,
+        birthday: _birthdayController.text,
+        note: _notesController.text,
+        items: _listOrderItem);
+  }
 
   set isShowCustomer(bool param) => _isShowCustomer = param;
 

@@ -62,7 +62,7 @@ class OrderScreen extends AppWidget<OrderNotifier, void, void> {
                 ),
                 Text(
                   DateTimeHelper.formatDateTimeFromString(
-                      dateTimeString: item.updatedAt,
+                      dateTimeString: item.updatedAt!,
                       format: 'dd MMM yyyy HH:mm'),
                   style: GlobalHelper.getTextTheme(context,
                           appTextStyle: AppTextStyle.BODY_SMALL)

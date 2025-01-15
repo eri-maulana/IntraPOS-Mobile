@@ -10,6 +10,7 @@ import 'package:intrapos_mobile/app/data/source/order_api_service.dart';
 import 'package:intrapos_mobile/app/data/source/payment_method_api_service.dart';
 import 'package:intrapos_mobile/app/data/source/product_api_service.dart';
 import 'package:intrapos_mobile/app/data/source/setting_api_service.dart';
+import 'package:intrapos_mobile/app/domain/entity/order.dart';
 import 'package:intrapos_mobile/app/domain/entity/product.dart';
 import 'package:intrapos_mobile/app/domain/repository/auth_repository.dart';
 import 'package:intrapos_mobile/app/domain/repository/order_repository.dart';
@@ -19,6 +20,8 @@ import 'package:intrapos_mobile/app/domain/repository/setting_repository.dart';
 import 'package:intrapos_mobile/app/domain/usecase/auth_login.dart';
 import 'package:intrapos_mobile/app/domain/usecase/order_get_all.dart';
 import 'package:intrapos_mobile/app/domain/usecase/order_get_today.dart';
+import 'package:intrapos_mobile/app/domain/usecase/order_send.dart';
+import 'package:intrapos_mobile/app/domain/usecase/payment_method_get_all.dart';
 import 'package:intrapos_mobile/app/domain/usecase/product_get_all.dart';
 import 'package:intrapos_mobile/app/domain/usecase/product_get_by_barcode.dart';
 import 'package:intrapos_mobile/app/presentation/add_product_order/add_product_order_notifier.dart';
@@ -51,18 +54,24 @@ void initDependency() {
   sl.registerSingleton<AuthApiService>(AuthApiService(sl()));
   sl.registerSingleton<OrderApiService>(OrderApiService(sl()));
   sl.registerSingleton<ProductApiService>(ProductApiService(sl()));
+  sl.registerSingleton<PaymentMethodApiService>(PaymentMethodApiService(sl()));
 
   //repository
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl()));
   sl.registerSingleton<OrderRepository>(OrderRepositoryImpl(sl()));
   sl.registerSingleton<ProductRepository>(ProductRepositoryImpl(sl()));
+  sl.registerSingleton<PaymentMethodRepository>(
+      PaymentMethodRepositoryImpl(sl()));
 
   //use case
   sl.registerSingleton<AuthLoginUseCase>(AuthLoginUseCase(sl()));
   sl.registerSingleton<OrderGetTodayUseCase>(OrderGetTodayUseCase(sl()));
+  sl.registerSingleton<OrderSendUseCase>(OrderSendUseCase(sl()));
   sl.registerSingleton<OrderGetAllUseCase>(OrderGetAllUseCase(sl()));
   sl.registerSingleton<ProductGetAllUseCase>(ProductGetAllUseCase(sl()));
   sl.registerSingleton<ProductGetByBarcodeUseCase>(ProductGetByBarcodeUseCase(sl()));
+  sl.registerSingleton<PaymentMethodGetAllUseCase>(
+      PaymentMethodGetAllUseCase(sl()));
 
   //presentation
   sl.registerFactoryParam<LoginNotifier, void, void>(
@@ -81,5 +90,11 @@ void initDependency() {
   sl.registerFactoryParam<AddProductOrderNotifier, List<ProductItemOrderEntity>,
       void>(
     (param1, param2) => AddProductOrderNotifier(param1, sl()),
+  );
+  sl.registerFactoryParam<CheckoutNotifier, OrderEntity, void>(
+    (param1, param2) => CheckoutNotifier(param1, sl(), sl()),
+  );
+  sl.registerFactoryParam<PrintNotifier, void, void>(
+    (param1, param2) => PrintNotifier(),
   );
 }

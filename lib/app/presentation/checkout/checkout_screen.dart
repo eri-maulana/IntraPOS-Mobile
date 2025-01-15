@@ -2,12 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/material/app_bar.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:intrapos_mobile/app/domain/entity/order.dart';
+import 'package:intrapos_mobile/app/domain/entity/product.dart';
 import 'package:intrapos_mobile/app/presentation/checkout/checkout_notifier.dart';
 import 'package:intrapos_mobile/app/presentation/print/print_screen.dart';
+import 'package:intrapos_mobile/core/helper/date_time_helper.dart';
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
+import 'package:intrapos_mobile/core/helper/number_helper.dart';
 import 'package:intrapos_mobile/core/widget/app_widget.dart';
 
-class CheckoutScreen extends AppWidget<CheckoutNotifier, void, void> {
+class CheckoutScreen extends AppWidget<CheckoutNotifier, OrderEntity, void> {
+  CheckoutScreen({required super.param1});
   @override
   AppBar? appBarBuild(BuildContext context) {
     return AppBar(
@@ -43,6 +48,20 @@ class CheckoutScreen extends AppWidget<CheckoutNotifier, void, void> {
     ));
   }
 
+  @override
+  checkVariable(BuildContext context) async {
+    if (notifier.isSuccess) {
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PrintScreen(
+              // param1: notifier.order.id,
+            ),
+          ));
+      Navigator.pop(context, true);
+    }
+  }
+
   _customerLayout(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(10),
@@ -67,7 +86,7 @@ class CheckoutScreen extends AppWidget<CheckoutNotifier, void, void> {
               SizedBox(
                 width: 3,
               ),
-              Text(': nama_customer'),
+              Text(': ${notifier.order.name}'),
             ],
           ),
           SizedBox(
@@ -75,11 +94,13 @@ class CheckoutScreen extends AppWidget<CheckoutNotifier, void, void> {
           ),
           Row(
             children: [
-              Icon(Icons.male),
+              Icon((notifier.order.gender == CheckoutNotifier.MALE)
+                  ? Icons.male
+                  : Icons.female),
               SizedBox(
                 width: 3,
               ),
-              Text(': laki - laki'),
+              Text(':  ${(notifier.order.gender == CheckoutNotifier.MALE) ? 'Laki-laki' : 'Perempuan'}'),
             ],
           ),
           SizedBox(
@@ -91,7 +112,7 @@ class CheckoutScreen extends AppWidget<CheckoutNotifier, void, void> {
               SizedBox(
                 width: 3,
               ),
-              Text(': customer@gmail.com'),
+              Text(': ${notifier.order.email ?? '-'}'),
             ],
           ),
           SizedBox(
@@ -103,7 +124,7 @@ class CheckoutScreen extends AppWidget<CheckoutNotifier, void, void> {
               SizedBox(
                 width: 3,
               ),
-              Text(': +628xxxxxxxxx'),
+              Text(': ${notifier.order.phone ?? '-'}'),
             ],
           ),
           SizedBox(
@@ -115,7 +136,7 @@ class CheckoutScreen extends AppWidget<CheckoutNotifier, void, void> {
               SizedBox(
                 width: 3,
               ),
-              Text(': 11 Mei 2001'),
+              Text(': ${(notifier.order.birthday != null) ? DateTimeHelper.formatDateTimeFromString(dateTimeString: notifier.order.birthday!, format: 'dd MMM yyyy') : '-'}'),
             ],
           ),
           SizedBox(
@@ -131,7 +152,7 @@ class CheckoutScreen extends AppWidget<CheckoutNotifier, void, void> {
                 width: 35,
               ),
               Expanded(
-                child: Text('Catatan Pembeli'),
+                child: Text('${notifier.order.note ?? '-'}'),
               ),
             ],
           )
@@ -144,14 +165,13 @@ class CheckoutScreen extends AppWidget<CheckoutNotifier, void, void> {
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
-        border: Border.all(
-            color: GlobalHelper.getColorScheme(context).shadow, width: 0.5),
-        borderRadius: BorderRadius.circular(10),
-      ),
+          border: Border.all(
+              color: GlobalHelper.getColorScheme(context).shadow, width: 0.5),
+          borderRadius: BorderRadius.circular(10)),
       child: Column(
         children: [
           Text(
-            'Produk dipesan',
+            'Produk Dipesan',
             style: GlobalHelper.getTextTheme(context,
                 appTextStyle: AppTextStyle.TITLE_MEDIUM),
           ),
@@ -172,12 +192,13 @@ class CheckoutScreen extends AppWidget<CheckoutNotifier, void, void> {
                 ),
                 SizedBox(
                   height: 5,
-                ),
+                )
               ],
             ),
-            itemCount: 5,
+            itemCount: notifier.order.items.length,
             itemBuilder: (context, index) {
-              return _itemProductLayout(context);
+              final item = notifier.order.items[index];
+              return _itemProductLayout(context, item);
             },
           )
         ],
@@ -189,10 +210,9 @@ class CheckoutScreen extends AppWidget<CheckoutNotifier, void, void> {
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
-        border: Border.all(
-            color: GlobalHelper.getColorScheme(context).shadow, width: 0.5),
-        borderRadius: BorderRadius.circular(10),
-      ),
+          border: Border.all(
+              color: GlobalHelper.getColorScheme(context).shadow, width: 0.5),
+          borderRadius: BorderRadius.circular(10)),
       child: Column(
         children: [
           Text(
@@ -201,68 +221,78 @@ class CheckoutScreen extends AppWidget<CheckoutNotifier, void, void> {
                 appTextStyle: AppTextStyle.TITLE_MEDIUM),
           ),
           SizedBox(
-            height: 10,
+            height: 20,
           ),
           TextField(
+            controller: notifier.totalController,
+            keyboardType: TextInputType.number,
+            readOnly: true,
             decoration: InputDecoration(
                 label: Text('Total Pembayaran'), border: OutlineInputBorder()),
           ),
           SizedBox(
-            height: 5,
+            height: 10,
           ),
-          TextField(
-            decoration: InputDecoration(
-                label: Text('Metode Pembayaran'), border: OutlineInputBorder()),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          TextField(
-            decoration: InputDecoration(
-                label: Text('Nominal Bayar'), border: OutlineInputBorder()),
+          DropdownMenu<int>(
+            expandedInsets: EdgeInsets.symmetric(horizontal: 1),
+            label: Text('Metode Pembayaran'),
+            controller: notifier.methodController,
+            dropdownMenuEntries: notifier.listDropdownPaymentMethod,
+            initialSelection: notifier.initialPaymentMethod,
           ),
           SizedBox(
-            height: 5,
+            height: 10,
           ),
           TextField(
+            controller: notifier.amountController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+                label: Text('Nominal bayar'), border: OutlineInputBorder()),
+            onSubmitted: (value) => _updateChangeAmount(),
+            onTapOutside: (event) => _updateChangeAmount(),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextField(
+            controller: notifier.changeController,
+            keyboardType: TextInputType.number,
+            readOnly: true,
             decoration: InputDecoration(
                 label: Text('Kembalian'), border: OutlineInputBorder()),
-          ),
-          SizedBox(
-            height: 5,
           ),
         ],
       ),
     );
   }
 
-  _itemProductLayout(BuildContext context) {
+  _itemProductLayout(BuildContext context, ProductItemOrderEntity item) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'nama_produk',
+          item.name,
           style: GlobalHelper.getTextTheme(context,
-              appTextStyle: AppTextStyle.TITLE_MEDIUM),
+              appTextStyle: AppTextStyle.BODY_MEDIUM),
         ),
         Align(
           alignment: Alignment.centerRight,
           child: Text(
-            '1 x Rp. 50.000',
+            '${item.quantity} x ${NumberHelper.formatIdr(item.price)}',
             style: GlobalHelper.getTextTheme(context,
                     appTextStyle: AppTextStyle.BODY_LARGE)
                 ?.copyWith(fontWeight: FontWeight.bold),
           ),
-        ),
+        )
       ],
     );
   }
 
-  _onPressSend(BuildContext context)  {
-     Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PrintScreen(),
-        ));
+  _updateChangeAmount() {
+    notifier.updateChangeAmount();
+  }
+
+  _onPressSend(BuildContext context) {
+    notifier.send();
   }
 }

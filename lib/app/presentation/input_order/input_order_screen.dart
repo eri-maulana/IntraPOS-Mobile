@@ -271,11 +271,12 @@ class InputOrderScreen extends AppWidget<InputOrderNotifier, void, void> {
     notifier.updateQuantity(item, item.quantity + 1);
   }
 
-  _onPressCheckout(BuildContext context) {
-    Navigator.push(
+  _onPressCheckout(BuildContext context) async {
+    bool? isDone = await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CheckoutScreen(),
+          builder: (context) => CheckoutScreen(param1: notifier.order),
         ));
+    if (isDone ?? false) Navigator.pop(context);
   }
 }
