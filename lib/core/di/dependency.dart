@@ -103,8 +103,8 @@ void initDependency() {
   sl.registerFactoryParam<CheckoutNotifier, OrderEntity, void>(
     (param1, param2) => CheckoutNotifier(param1, sl(), sl()),
   );
-  sl.registerFactoryParam<PrintNotifier, OrderEntity, void>(
-    (param1, param2) => PrintNotifier(param1, sl()),
+  sl.registerFactoryParam<PrintNotifier, void, void>(
+    (param1, param2) => PrintNotifier(),
   );
   sl.registerFactoryParam<ProfilNotifier, void, void>(
     (param1, param2) => ProfilNotifier(),
@@ -113,6 +113,6 @@ void initDependency() {
     (param1, param2) => ProductNotifier(sl()),
   );
   sl.registerFactoryParam<DetailOrderNotifier, int, void>(
-    (param1, param2) => DetailOrderNotifier(param1, sl()),
+    (param1, param2) => DetailOrderNotifier(param1, sl(), sl()),
   );
 }

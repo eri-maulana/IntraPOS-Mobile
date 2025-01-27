@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/material/app_bar.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:intrapos_mobile/app/presentation/login/login_screen.dart';
+import 'package:intrapos_mobile/app/presentation/print/print_screen.dart';
 import 'package:intrapos_mobile/app/presentation/product/product_screen.dart';
 import 'package:intrapos_mobile/app/presentation/profil/profil_notifier.dart';
 import 'package:intrapos_mobile/core/helper/global_helper.dart';
@@ -22,18 +23,28 @@ class ProfilScreen extends AppWidget<ProfilNotifier, void, void> {
         child: Column(
           children: [
             _headerLayout(context),
-          Container(
-            width: double.maxFinite,
-            child: FilledButton(
-                onPressed: () => _onPressProduct(context),
-                child: Text('Produk')),
-          ),
-          SizedBox(
-            height: 30,
-          ),
+            Container(
+              width: double.maxFinite,
+              child: FilledButton(
+                  onPressed: () => _onPressProduct(context),
+                  child: Text('Produk')),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              width: double.maxFinite,
+              child: FilledButton(
+                  onPressed: () => _onPressSettingPrinter(context),
+                  child: Text('Setting Printer')),
+            ),
+            SizedBox(
+              height: 30,
+            ),
             Container(
                 width: double.maxFinite,
-                child: ElevatedButton(onPressed: () => _onPressLogout(), child: Text('Logout')))
+                child: ElevatedButton(
+                    onPressed: () => _onPressLogout(), child: Text('Logout')))
           ],
         ),
       ),
@@ -63,7 +74,7 @@ class ProfilScreen extends AppWidget<ProfilNotifier, void, void> {
           radius: 60,
           backgroundColor: GlobalHelper.getColorScheme(context).primary,
           child: Text(
-            notifier.name.substring(0,1),
+            notifier.name.substring(0, 1),
             style: GlobalHelper.getTextTheme(context,
                     appTextStyle: AppTextStyle.DISPLAY_MEDIUM)
                 ?.copyWith(
@@ -109,4 +120,12 @@ class ProfilScreen extends AppWidget<ProfilNotifier, void, void> {
   _onPressLogout() {
     notifier.logout();
   }
+}
+
+_onPressSettingPrinter(BuildContext context) {
+  Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PrintScreen(),
+      ));
 }

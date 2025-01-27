@@ -264,9 +264,6 @@ class DetailOrderScreen extends AppWidget<DetailOrderNotifier, int, void> {
   }
 
   _onPressPrint(BuildContext context) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => PrintScreen(param1: notifier.order)));
+    notifier.print();
   }
 }

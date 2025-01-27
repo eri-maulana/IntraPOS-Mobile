@@ -8,13 +8,11 @@ import 'package:intrapos_mobile/core/helper/global_helper.dart';
 import 'package:intrapos_mobile/core/widget/app_widget.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 
-class PrintScreen extends AppWidget<PrintNotifier, OrderEntity, void> {
-  PrintScreen({required super.param1});
-
+class PrintScreen extends AppWidget<PrintNotifier, void, void> {
   @override
   AppBar? appBarBuild(BuildContext context) {
     return AppBar(
-      title: Text('Cetak Invoice'),
+      title: Text('Setting Printer'),
     );
   }
 
@@ -25,28 +23,7 @@ class PrintScreen extends AppWidget<PrintNotifier, OrderEntity, void> {
       padding: EdgeInsets.all(10),
       width: double.maxFinite,
       child: Column(
-        children: [
-          SizedBox(
-            height: 40,
-          ),
-          Icon(
-            Icons.check_circle,
-            size: 75,
-            color: Colors.green,
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Text(
-            'Order berhasil disimpan',
-            style: GlobalHelper.getTextTheme(context,
-                appTextStyle: AppTextStyle.HEADLINE_SMALL),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          _deviceLayout(context)
-        ],
+        children: [_deviceLayout(context)],
       ),
     ));
   }
@@ -100,15 +77,20 @@ class PrintScreen extends AppWidget<PrintNotifier, OrderEntity, void> {
           SizedBox(
             width: 5,
           ),
-          FilledButton(
-              onPressed: () => _onPressPrint(item), child: Text('Print'))
+          (item.macAdress == notifier.printerSave)
+              ? Text(
+                  'Dipilih',
+                  style: GlobalHelper.getTextTheme(context,
+                      appTextStyle: AppTextStyle.BODY_MEDIUM),
+                )
+              : FilledButton(
+                  onPressed: () => _onPressPrint(item), child: Text('Print'))
         ],
       ),
     );
   }
 
   _onPressPrint(BluetoothInfo item) {
-    notifier.print(item.macAdress);
+    notifier.save(item.macAdress);
   }
 }
-
